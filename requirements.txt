@@ -1,0 +1,4 @@
+requests
+Markdown
+django-mdeditor
+pymysql
