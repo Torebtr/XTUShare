@@ -79,7 +79,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'zslibrary',
-        'USER': 'root',
+        'USER': 'zslibrary',
         'PASSWORD': 'admin123',
         'HOST': '127.0.0.1',
         'PORT': '3306',
