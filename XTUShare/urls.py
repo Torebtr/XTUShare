@@ -15,8 +15,18 @@ Including another URLconf
 """
 # from django.contrib import admin
 from django.urls import path
-from shareplat import views
+from django.conf.urls import url, include
+from django.conf.urls.static import static
+from django.conf import settings
+from django.views.static import serve
+from shareplat import views as shareplate
 
 urlpatterns = [
-    path('main/',views.page_main,name='page_main'),
+    path('',shareplate.page_main),
+    path('XTUShare/',include('shareplat.urls')),
+    path('mdeditor/', include('mdeditor.urls')),
+    url(r'^static/(?P<path>.*)$', serve, {'document_root': settings.STATIC_ROOT}, name='static'),
 ]
+if settings.DEBUG:
+    # static files (images, css, javascript, etc.)
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
