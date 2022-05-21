@@ -81,6 +81,11 @@ def login(request):
             return render(request, 'login.html', context=context)
 
 
+def logout(request):
+    request.session.clear()
+    return HttpResponseRedirect('/XTUShare/login/')
+
+
 def register(request):
     if request.method == "GET":
         return render(request,'register.html')
@@ -113,4 +118,4 @@ def register(request):
         context ={
             'info': '注册成功'
         }
-        return render(request, 'register.html', context=context)
+        return render(request, 'login.html', context=context)
