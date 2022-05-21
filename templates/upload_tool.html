@@ -48,18 +48,18 @@
         <div class="nano">
             <div class="nano-content">
                 <ul>
-                    <li><a href="/Gr33kLibrary/main/"><i class="ti-home"></i>&nbsp;&nbsp;首页</a></li>
-                    <li><a href="/Gr33kLibrary/library/"><i class="ti-harddrives"></i>&nbsp;&nbsp;文库</a></li>
-                    <li><a href="/Gr33kLibrary/myarticle/1/"><i class="ti-save-alt"></i>&nbsp;&nbsp;我的文章</a></li>
+                    <li><a href="/XTUShare/main/"><i class="ti-home"></i>&nbsp;&nbsp;首页</a></li>
+                    <li><a href="/XTUShare/library/"><i class="ti-harddrives"></i>&nbsp;&nbsp;文库</a></li>
+                    <li><a href="/XTUShare/myarticle/1/"><i class="ti-save-alt"></i>&nbsp;&nbsp;我的文章</a></li>
 
-                    <li><a href="/Gr33kLibrary/classify_manage/"><i class="ti-tag"></i>&nbsp;&nbsp;分类管理</a></li>
-                    <li><a href="/Gr33kLibrary/tools_manage/"><i class="ti-import"></i>&nbsp;&nbsp;代码&工具管理</a></li>
+                    <li><a href="/XTUShare/classify_manage/"><i class="ti-tag"></i>&nbsp;&nbsp;分类管理</a></li>
+                    <li><a href="/XTUShare/tools_manage/"><i class="ti-import"></i>&nbsp;&nbsp;代码&工具管理</a></li>
 
-                    <li><a href="/Gr33kLibrary/my_setting/"><i class="ti-settings"></i>&nbsp;&nbsp;我的设置</a></li>
-                    <li><a href="/Gr33kLibrary/invitation_code_manage/"><i class="ti-vimeo"></i>&nbsp;&nbsp;邀请码管理</a></li>
+                    <li><a href="/XTUShare/my_setting/"><i class="ti-settings"></i>&nbsp;&nbsp;我的设置</a></li>
+                    <li><a href="/XTUShare/invitation_code_manage/"><i class="ti-vimeo"></i>&nbsp;&nbsp;邀请码管理</a></li>
                     {% if current_user.username == "Gr33k" %}
-                        <li><a href="/Gr33kLibrary/verify/"><i class="ti-shield"></i>&nbsp;&nbsp;审核文章</a></li>
-                        <li><a href="/Gr33kLibrary/user_manage/1/"><i class="ti-user"></i>&nbsp;&nbsp;用户管理</a></li>
+                        <li><a href="/XTUShare/verify/"><i class="ti-shield"></i>&nbsp;&nbsp;审核文章</a></li>
+                        <li><a href="/XTUShare/user_manage/1/"><i class="ti-user"></i>&nbsp;&nbsp;用户管理</a></li>
                     {% endif %}
 
                 </ul>
@@ -73,7 +73,7 @@
     <div class="header">
         <div class="pull-left">
                         <div class="logo">
-                <a href="/Gr33kLibrary/main/">
+                <a href="/XTUShare/main/">
                     <img id="logoImg"
                     src="{% static 'logo/logo.png' %}"
                     data-logo_big="{% static 'logo/logo.png' %}"
@@ -94,10 +94,10 @@
                         <div class="dropdown-content-body">
                             <ul>
                                 {% if current_user %}
-                                    <li><a href="/Gr33kLibrary/change_password/"><i class="ti-loop"></i> <span>修改密码</span></a></li>
-                                <li><a href="/Gr33kLibrary/logout/"><i class="ti-power-off"></i> <span>退出</span></a></li>
+                                    <li><a href="/XTUShare/change_password/"><i class="ti-loop"></i> <span>修改密码</span></a></li>
+                                <li><a href="/XTUShare/logout/"><i class="ti-power-off"></i> <span>退出</span></a></li>
                                 {% else %}
-                                <li><a href="/Gr33kLibrary/login/"><i class="ti-power-off"></i> <span>登录</span></a></li>
+                                <li><a href="/XTUShare/login/"><i class="ti-power-off"></i> <span>登录</span></a></li>
                                 {% endif %}
                             </ul>
                         </div>
@@ -144,7 +144,7 @@
 
 
 {#                                    <div class="basic-form">#}
-{#                                        <form action="/Gr33kLibrary/upload_tool/" method="post" enctype="multipart/form-data">#}
+{#                                        <form action="/XTUShare/upload_tool/" method="post" enctype="multipart/form-data">#}
 {#                                            {% csrf_token %}#}
 {#                                            <div class="form-group">#}
 {#                                                <p class="text-muted m-b-15 f-s-12">请输入<code>工具名称</code></p>#}
@@ -180,7 +180,7 @@
         var task_id = WebUploader.Base.guid();        //产生task_id
         var uploader = WebUploader.create({           //创建上传控件
             {#swf: 'https://cdn.staticfile.org/webuploader/0.1.1/Uploader.swf', //swf位置，这个可能与flash有关#}
-            server: '/Gr33kLibrary/files/upload/',                 //接收每一个分片的服务器地址
+            server: '/XTUShare/files/upload/',                 //接收每一个分片的服务器地址
             pick: '#picker',                          //填上传按钮的id选择器值
             auto: true,                               //选择文件后，是否自动上传
             chunked: true,                            //是否分片
@@ -208,7 +208,7 @@
             //上传的信息（文件唯一标识符，文件名）
             var tool_name = $("#tool_name").val();
             var data = {'task_id': task_id, 'filename': file.source['name'],'tool_name':tool_name };
-            $.get('/Gr33kLibrary/upload/complete/', data);          //ajax携带data向该url发请求
+            $.get('/XTUShare/upload/complete/', data);          //ajax携带data向该url发请求
             $('.progress-bar').css('width', '100%');
             $('.progress-bar').text('上传完成');
         });

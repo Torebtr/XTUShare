@@ -52,39 +52,27 @@ def page_main(request):
 
 def login(request):
     if request.method == "GET":
-        return render(request,'login.html')
+        return render(request, 'login.html')
     else:
         username = request.POST.get('username')
         password = request.POST.get('password')
-        m = hashlib.md5(password.encode())
-        encry_password = m.hexdigest()
+        m = hashlib.md5(password.encode())       # 创建对象
+        encry_password = m.hexdigest()           # 密码md5加密
         try:
             user = User.objects.get(username=username)
             if user.password == encry_password:
-                if not user.is_lock:
-                    request.session['user'] = user.id
-                    user.login_fail = 0
-                    user.save()
-                    request.session.set_expiry(36000)
-                    return HttpResponseRedirect('/Gr33kLibrary/main/')
-                else:
-                    context = {
-                        'info': '账号已被锁定,请联系管理员解锁'
-                    }
-                    return render(request, 'login.html', context=context)
+                request.session['user'] = user.id
+                user.login_fail = 0
+                user.save()
+                request.session.set_expiry(36000)
+                return HttpResponseRedirect('/XTUShare/main/')
+
             else:
-                if user.login_fail < 5:
-                    user.login_fail += 1
-                    user.save()
-                    context = {
-                        'info':'账号或密码错误'
-                    }
-                else:
-                    user.is_lock = True
-                    user.save()
-                    context = {
-                        'info': '账号已被锁定,请联系管理员解锁'
-                    }
+                user.login_fail += 1
+                user.save()
+                context = {
+                    'info':'账号或密码错误'
+                }
                 return render(request,'login.html',context=context)
         except:
             context = {

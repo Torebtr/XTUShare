@@ -42,18 +42,18 @@
         <div class="nano">
             <div class="nano-content">
                 <ul>
-                    <li><a href="/Gr33kLibrary/main/"><i class="ti-home"></i>&nbsp;&nbsp;首页</a></li>
-                    <li><a href="/Gr33kLibrary/library/"><i class="ti-harddrives"></i>&nbsp;&nbsp;文库</a></li>
-                    <li><a href="/Gr33kLibrary/myarticle/1/"><i class="ti-save-alt"></i>&nbsp;&nbsp;我的文章</a></li>
+                    <li><a href="/XTUShare/main/"><i class="ti-home"></i>&nbsp;&nbsp;首页</a></li>
+                    <li><a href="/XTUShare/library/"><i class="ti-harddrives"></i>&nbsp;&nbsp;文库</a></li>
+                    <li><a href="/XTUShare/myarticle/1/"><i class="ti-save-alt"></i>&nbsp;&nbsp;我的文章</a></li>
 
-                    <li><a href="/Gr33kLibrary/classify_manage/"><i class="ti-tag"></i>&nbsp;&nbsp;分类管理</a></li>
-                    <li><a href="/Gr33kLibrary/tools_manage/"><i class="ti-import"></i>&nbsp;&nbsp;代码&工具管理</a></li>
+                    <li><a href="/XTUShare/classify_manage/"><i class="ti-tag"></i>&nbsp;&nbsp;分类管理</a></li>
+                    <li><a href="/XTUShare/tools_manage/"><i class="ti-import"></i>&nbsp;&nbsp;代码&工具管理</a></li>
 
-                    <li><a href="/Gr33kLibrary/my_setting/"><i class="ti-settings"></i>&nbsp;&nbsp;我的设置</a></li>
-                    <li><a href="/Gr33kLibrary/invitation_code_manage/"><i class="ti-vimeo"></i>&nbsp;&nbsp;邀请码管理</a></li>
+                    <li><a href="/XTUShare/my_setting/"><i class="ti-settings"></i>&nbsp;&nbsp;我的设置</a></li>
+                    <li><a href="/XTUShare/invitation_code_manage/"><i class="ti-vimeo"></i>&nbsp;&nbsp;邀请码管理</a></li>
                     {% if current_user.username == "Gr33k" %}
-                        <li><a href="/Gr33kLibrary/verify/"><i class="ti-shield"></i>&nbsp;&nbsp;审核文章</a></li>
-                        <li><a href="/Gr33kLibrary/user_manage/1/"><i class="ti-user"></i>&nbsp;&nbsp;用户管理</a></li>
+                        <li><a href="/XTUShare/verify/"><i class="ti-shield"></i>&nbsp;&nbsp;审核文章</a></li>
+                        <li><a href="/XTUShare/user_manage/1/"><i class="ti-user"></i>&nbsp;&nbsp;用户管理</a></li>
                     {% endif %}
 
                 </ul>
@@ -67,7 +67,7 @@
     <div class="header">
         <div class="pull-left">
                         <div class="logo">
-                <a href="/Gr33kLibrary/main/">
+                <a href="/XTUShare/main/">
                     <img id="logoImg"
                     src="{% static 'logo/logo.png' %}"
                     data-logo_big="{% static 'logo/logo.png' %}"
@@ -88,10 +88,10 @@
                         <div class="dropdown-content-body">
                             <ul>
                                 {% if current_user %}
-                                    <li><a href="/Gr33kLibrary/change_password/"><i class="ti-loop"></i> <span>修改密码</span></a></li>
-                                <li><a href="/Gr33kLibrary/logout/"><i class="ti-power-off"></i> <span>退出</span></a></li>
+                                    <li><a href="/XTUShare/change_password/"><i class="ti-loop"></i> <span>修改密码</span></a></li>
+                                <li><a href="/XTUShare/logout/"><i class="ti-power-off"></i> <span>退出</span></a></li>
                                 {% else %}
-                                <li><a href="/Gr33kLibrary/login/"><i class="ti-power-off"></i> <span>登录</span></a></li>
+                                <li><a href="/XTUShare/login/"><i class="ti-power-off"></i> <span>登录</span></a></li>
                                 {% endif %}
                             </ul>
                         </div>
@@ -113,7 +113,7 @@
                         <div class="col-lg-12">
                             <div class="card alert">
                                 <div class="card-header">
-                                    <div align="right"><a href="/Gr33kLibrary/add_user/" type="button" class="btn btn-primary btn-outline m-b-10 m-l-5">添加用户</a></div><br>
+                                    <div align="right"><a href="/XTUShare/add_user/" type="button" class="btn btn-primary btn-outline m-b-10 m-l-5">添加用户</a></div><br>
                                     <h4>用户列表</h4>
                                 </div>
 
@@ -150,7 +150,7 @@
                                                     {% endif %}
                                                 </td>
                                                 <td>
-                                                    <a type="button" class="btn btn-primary btn-outline m-b-10 m-l-5 btn-sm" href="/Gr33kLibrary/edite_user/{{ user.author.id }}/">编辑</a>
+                                                    <a type="button" class="btn btn-primary btn-outline m-b-10 m-l-5 btn-sm" href="/XTUShare/edite_user/{{ user.author.id }}/">编辑</a>
                                                     <button type="button" class="btn btn-danger btn-outline m-b-10 m-l-5 btn-sm" onclick="delete_user({{ user.author.id }})">删除</button>
                                                 </td>
                                             </tr>
@@ -160,10 +160,10 @@
                                 当前第<font color="red">{{ page_num }}</font>页&nbsp;&nbsp;共<font color="red">{{ page_sum }}</font>页
                                     <div align="right">
                                         {% if page_num > 1 %}
-                                        <a type="button" class="btn btn-primary m-b-10 m-l-5" href="/Gr33kLibrary/user_manage/{{ pre_num }}/">上一页</a>
+                                        <a type="button" class="btn btn-primary m-b-10 m-l-5" href="/XTUShare/user_manage/{{ pre_num }}/">上一页</a>
                                         {% endif %}
                                         {% if page_num < page_sum %}
-                                        <a type="button" class="btn btn-primary m-b-10 m-l-5" href="/Gr33kLibrary/user_manage/{{ next_num }}/">下一页</a>
+                                        <a type="button" class="btn btn-primary m-b-10 m-l-5" href="/XTUShare/user_manage/{{ next_num }}/">下一页</a>
                                         {% endif %}
                                     </div>
                                 </div>
@@ -183,7 +183,7 @@
             var x = confirm("确定删除吗?");
             if(x){
                 myajax.post({
-                    'url':'/Gr33kLibrary/delete_user/',
+                    'url':'/XTUShare/delete_user/',
                     'dataType':'json',
                     'data':{
                         'user_id':user_id,
@@ -201,7 +201,7 @@
             var x = confirm("确定改变该用户的状态吗?");
             if(x){
                 myajax.post({
-                    'url':'/Gr33kLibrary/change_user_state/',
+                    'url':'/XTUShare/change_user_state/',
                     'dataType':'json',
                     'data':{
                         'user_id':user_id,

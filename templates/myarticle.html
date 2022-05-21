@@ -43,18 +43,18 @@
         <div class="nano">
             <div class="nano-content">
                 <ul>
-                    <li><a href="/Gr33kLibrary/main/"><i class="ti-home"></i>&nbsp;&nbsp;首页</a></li>
-                    <li><a href="/Gr33kLibrary/library/"><i class="ti-harddrives"></i>&nbsp;&nbsp;文库</a></li>
-                    <li><a href="/Gr33kLibrary/myarticle/1/"><i class="ti-save-alt"></i>&nbsp;&nbsp;我的文章</a></li>
+                    <li><a href="/XTUShare/main/"><i class="ti-home"></i>&nbsp;&nbsp;首页</a></li>
+                    <li><a href="/XTUShare/library/"><i class="ti-harddrives"></i>&nbsp;&nbsp;文库</a></li>
+                    <li><a href="/XTUShare/myarticle/1/"><i class="ti-save-alt"></i>&nbsp;&nbsp;我的文章</a></li>
 
-                    <li><a href="/Gr33kLibrary/classify_manage/"><i class="ti-tag"></i>&nbsp;&nbsp;分类管理</a></li>
-                    <li><a href="/Gr33kLibrary/tools_manage/"><i class="ti-import"></i>&nbsp;&nbsp;代码&工具管理</a></li>
+                    <li><a href="/XTUShare/classify_manage/"><i class="ti-tag"></i>&nbsp;&nbsp;分类管理</a></li>
+                    <li><a href="/XTUShare/tools_manage/"><i class="ti-import"></i>&nbsp;&nbsp;代码&工具管理</a></li>
 
-                    <li><a href="/Gr33kLibrary/my_setting/"><i class="ti-settings"></i>&nbsp;&nbsp;我的设置</a></li>
-                    <li><a href="/Gr33kLibrary/invitation_code_manage/"><i class="ti-vimeo"></i>&nbsp;&nbsp;邀请码管理</a></li>
+                    <li><a href="/XTUShare/my_setting/"><i class="ti-settings"></i>&nbsp;&nbsp;我的设置</a></li>
+                    <li><a href="/XTUShare/invitation_code_manage/"><i class="ti-vimeo"></i>&nbsp;&nbsp;邀请码管理</a></li>
                     {% if current_user.username == "Gr33k" %}
-                        <li><a href="/Gr33kLibrary/verify/"><i class="ti-shield"></i>&nbsp;&nbsp;审核文章</a></li>
-                        <li><a href="/Gr33kLibrary/user_manage/1/"><i class="ti-user"></i>&nbsp;&nbsp;用户管理</a></li>
+                        <li><a href="/XTUShare/verify/"><i class="ti-shield"></i>&nbsp;&nbsp;审核文章</a></li>
+                        <li><a href="/XTUShare/user_manage/1/"><i class="ti-user"></i>&nbsp;&nbsp;用户管理</a></li>
                     {% endif %}
 
                 </ul>
@@ -68,7 +68,7 @@
     <div class="header">
         <div class="pull-left">
                         <div class="logo">
-                <a href="/Gr33kLibrary/main/">
+                <a href="/XTUShare/main/">
                     <img id="logoImg"
                     src="{% static 'logo/logo.png' %}"
                     data-logo_big="{% static 'logo/logo.png' %}"
@@ -89,10 +89,10 @@
                         <div class="dropdown-content-body">
                             <ul>
                                 {% if current_user %}
-                                    <li><a href="/Gr33kLibrary/change_password/"><i class="ti-loop"></i> <span>修改密码</span></a></li>
-                                <li><a href="/Gr33kLibrary/logout/"><i class="ti-power-off"></i> <span>退出</span></a></li>
+                                    <li><a href="/XTUShare/change_password/"><i class="ti-loop"></i> <span>修改密码</span></a></li>
+                                <li><a href="/XTUShare/logout/"><i class="ti-power-off"></i> <span>退出</span></a></li>
                                 {% else %}
-                                <li><a href="/Gr33kLibrary/login/"><i class="ti-power-off"></i> <span>登录</span></a></li>
+                                <li><a href="/XTUShare/login/"><i class="ti-power-off"></i> <span>登录</span></a></li>
                                 {% endif %}
                             </ul>
                         </div>
@@ -133,23 +133,23 @@
                             <div class="card alert">
                                 <div class="card-header">
                                 <div align="right">
-                                    <a href="/Gr33kLibrary/create_article/" type="button" class="btn btn-primary btn-outline m-b-10 m-l-5">撰写文章</a>
+                                    <a href="/XTUShare/create_article/" type="button" class="btn btn-primary btn-outline m-b-10 m-l-5">撰写文章</a>
                                     <a type="button" class="btn btn-warning btn-outline m-b-10 m-l-5" onclick="go_set_classify()">更改栏目</a>
                                     <a  type="button" class="btn btn-warning btn-outline m-b-10 m-l-5" onclick="go_set_tags()">设置标签</a>
                                     <a  type="button" class="btn btn-danger btn-outline m-b-10 m-l-5" onclick="delete_select_article()">删除文章</a>
                                     <script>
                                         function go_set_classify() {
-                                            $("#select_form").attr('action','/Gr33kLibrary/go_set_classify/');
+                                            $("#select_form").attr('action','/XTUShare/go_set_classify/');
                                             $("#select_form").submit();
                                         }
                                         function go_set_tags() {
-                                            $("#select_form").attr('action','/Gr33kLibrary/go_set_tags/');
+                                            $("#select_form").attr('action','/XTUShare/go_set_tags/');
                                             $("#select_form").submit();
                                         }
                                         function delete_select_article() {
                                             var x = confirm("确定删除所选吗？此操作不可回退");
                                             if(x){
-                                                $("#select_form").attr('action','/Gr33kLibrary/delete_articles/');
+                                                $("#select_form").attr('action','/XTUShare/delete_articles/');
                                                 $("#select_form").submit();
                                             }
                                         }
@@ -176,7 +176,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                        <form action="/Gr33kLibrary/go_set_classify/" method="post" id="select_form">
+                                        <form action="/XTUShare/go_set_classify/" method="post" id="select_form">
                                         {% csrf_token %}
                                         {% for article in my_articles %}
                                             <tr>
@@ -205,9 +205,9 @@
                                                 </td>
                                                 <td>
                                                     {% if article.article.state == 1 or article.article.state == 2 %}
-                                                    <a type="button" class="btn btn-warning btn-outline m-b-10 m-l-5 btn-sm" href="/Gr33kLibrary/preview/{{ article.article.id }}/" target="_blank">预览</a>
+                                                    <a type="button" class="btn btn-warning btn-outline m-b-10 m-l-5 btn-sm" href="/XTUShare/preview/{{ article.article.id }}/" target="_blank">预览</a>
                                                     {% endif %}
-                                                    <a type="button" class="btn btn-primary btn-outline m-b-10 m-l-5 btn-sm" href="/Gr33kLibrary/edite_article/{{ article.article.id }}/">编辑</a>
+                                                    <a type="button" class="btn btn-primary btn-outline m-b-10 m-l-5 btn-sm" href="/XTUShare/edite_article/{{ article.article.id }}/">编辑</a>
                                                     <button type="button" class="btn btn-danger btn-outline m-b-10 m-l-5 btn-sm" onclick="delete_article({{ article.article.id }})">删除</button>
                                                 </td>
                                             </tr>
@@ -218,10 +218,10 @@
                                 当前第<font color="red">{{ page_num }}</font>页&nbsp;&nbsp;共<font color="red">{{ page_sum }}</font>页
                                     <div align="right">
                                         {% if page_num > 1 %}
-                                        <a type="button" class="btn btn-primary m-b-10 m-l-5" href="/Gr33kLibrary/myarticle/{{ pre_num }}/">上一页</a>
+                                        <a type="button" class="btn btn-primary m-b-10 m-l-5" href="/XTUShare/myarticle/{{ pre_num }}/">上一页</a>
                                         {% endif %}
                                         {% if page_num < page_sum %}
-                                        <a type="button" class="btn btn-primary m-b-10 m-l-5" href="/Gr33kLibrary/myarticle/{{ next_num }}/">下一页</a>
+                                        <a type="button" class="btn btn-primary m-b-10 m-l-5" href="/XTUShare/myarticle/{{ next_num }}/">下一页</a>
                                         {% endif %}
                                 </div>
 							</div><!-- /# card -->
@@ -242,7 +242,7 @@
                                 </div>
                                 <div class="card-body">
                                     <div class="basic-form">
-                                        <form method="post" action="/Gr33kLibrary/search_article/">
+                                        <form method="post" action="/XTUShare/search_article/">
                                             {% csrf_token %}
                                             <div class="form-group">
                                                 <p class="text-muted m-b-15 f-s-12">请将你要查找的<code>关键字</code>输入在下方输入框,检索范围:<code>标题</code><code>内容</code></p>
@@ -272,7 +272,7 @@
             var x = confirm("确定删除吗?");
             if(x){
                 myajax.post({
-                    'url':'/Gr33kLibrary/delete_article/',
+                    'url':'/XTUShare/delete_article/',
                     'dataType':'json',
                     'data':{
                         'article_id':article_id,
@@ -294,7 +294,7 @@
         }
         function show_back_info(article_id) {
             myajax.post({
-                'url':'/Gr33kLibrary/show_back_info/',
+                'url':'/XTUShare/show_back_info/',
                 'dataType':'json',
                 'data':{
                     'article_id':article_id,

@@ -6,11 +6,11 @@ from mdeditor.fields import MDTextField
 class User(models.Model):    # 用户
     id = models.AutoField(primary_key=True)
     username = models.CharField(max_length=255,unique=True)
-    password = models.CharField(max_length=255)
+    password = models.CharField(max_length=255)      # md5加密后的结果
     email = models.CharField(max_length=255,null=True)
     name = models.CharField(max_length=255,null=True)
-    is_lock = models.BooleanField(default=False)
-    login_fail = models.IntegerField(default=0)
+    # is_lock = models.BooleanField(default=False)
+    # login_fail = models.IntegerField(default=0)
     invitation_code = models.CharField(max_length=255,null=True,unique=True)
     invitation_user = models.IntegerField(null=True)
     create_time = models.DateTimeField(auto_now=False)
