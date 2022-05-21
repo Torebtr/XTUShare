@@ -1,8 +1,9 @@
 import datetime
 import hashlib
 
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
+from shareplat.func import *
 
 # Create your views here.
 import markdown
@@ -119,3 +120,128 @@ def register(request):
             'info': '注册成功'
         }
         return render(request, 'login.html', context=context)
+
+
+def myarticle(request, page_num):
+    try:
+        current_user = User.objects.filter().get(id=int(request.session['user']))   # 用户验证
+    except:
+        return HttpResponseRedirect('/XTUShare/login/')
+    if request.method == "GET":
+        if current_user == "XTUShare":
+            articles = Article.objects.all().order_by('-update_time')
+        else:
+            articles = Article.objects.filter(author=current_user).order_by('-update_time')     # 按时间降序
+        page_sum = int(articles.count() / 10) + 1
+        page_num = int(page_num) - 1
+        if page_num < 0 or page_num >= page_sum:
+            context = {
+                'current_user': current_user,
+                'info': '页码有误'
+            }
+            return render(request, 'show_info.html', context=context)
+        articles = articles[page_num*10:page_num*10 + 10]
+        my_articles = []
+
+        for article in articles:
+            try:
+                tags = article.tags.split(',')
+                if '' in tags:
+                    tags.remove('')
+            except Exception as e:
+                tags = []
+            my_articles.append(
+                Article_temp(
+                    article,
+                    tags
+                )
+            )
+        context = {
+            'current_user': current_user,
+            'my_articles': my_articles,
+            'page_num': page_num + 1,
+            'page_sum': page_sum,
+            'pre_num': page_num,
+            'next_num': page_num + 2,
+        }
+        return render(request, 'myarticle.html', context=context)
+
+
+def create_article(request):
+    try:
+        current_user = User.objects.filter().get(id=int(request.session['user']))
+    except:
+        return HttpResponseRedirect('/XTUShare/login/')
+
+    if request.method == "GET":
+        all_classify = Classify.objects.all()
+        all_tag = Tag.objects.all()
+        context = {
+            'current_user': current_user,
+            'all_classify': all_classify,
+            'all_tag': all_tag
+        }
+        return render(request, 'create_article.html', context=context)
+    else:
+        title = request.POST.get('title')
+        classify = Classify.objects.get(id=int(request.POST.get('classify')))
+        tags = request.POST.getlist('tag')
+        content = request.POST.get('content')
+        action = request.POST.get('action')
+        article_type = request.POST.get('article_type')
+        article_link = request.POST.get('article_link')
+        if action == "save":
+            Article.objects.create(
+                author=current_user,
+                title=title,
+                classify=classify,
+                tags=list2str(tags),
+                content=content,
+                create_time=datetime.datetime.now(),
+                state=1,      # 暂存
+                type=int(article_type),
+                article_link=article_link,
+                update_time=datetime.datetime.now()
+            )
+        else:
+            Article.objects.create(
+                author=current_user,
+                title=title,
+                classify=classify,
+                tags=list2str(tags),
+                content=content,
+                create_time=datetime.datetime.now(),
+                state=2,      # 发布
+                type=int(article_type),
+                article_link=article_link,
+                update_time=datetime.datetime.now()
+            )
+        return HttpResponseRedirect('/XTUShare/myarticle/1/')
+
+
+def delete_article(request):
+    try:
+        current_user = User.objects.filter().get(id=int(request.session['user']))
+    except:
+        return HttpResponseRedirect('/XTUShare/login/')
+
+    if request.method == "POST":
+        article_id = request.POST.get('article_id')
+        try:
+            article = Article.objects.get(id=article_id)
+            if current_user == article.author or current_user.username == 'XTUShare':
+                article.delete()
+                context = {
+                    'info': 'ok'
+                }
+            else:
+                context = {
+                    'info':'error'
+                }
+        except:
+            context = {
+                'info': 'error'
+            }
+        context = json.dumps(context)
+        return JsonResponse(context, safe=False)
+

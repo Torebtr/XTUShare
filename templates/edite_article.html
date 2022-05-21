@@ -93,7 +93,7 @@
 
                     <li><a href="/XTUShare/my_setting/"><i class="ti-settings"></i>&nbsp;&nbsp;我的设置</a></li>
 
-                    {% if current_user.username == "Gr33k" %}
+                    {% if current_user.username == "XTUShare" %}
                         <li><a href="/XTUShare/verify/"><i class="ti-shield"></i>&nbsp;&nbsp;审核文章</a></li>
                         <li><a href="/XTUShare/user_manage/1/"><i class="ti-user"></i>&nbsp;&nbsp;用户管理</a></li>
                     {% endif %}
@@ -219,16 +219,6 @@
                                     <div class="wmd-wrapper"  id="id_content-wmd-wrapper">
                                       <textarea  cols="40" id="id_content" name="content" rows="10" required>{{ article.content }}</textarea>
                                     </div>
-
-                                <div class="form-group">
-                                    <p class="text-muted m-b-15 f-s-12">粘贴图片<code>上传区</code></p>
-                                        <input type="text" class="form-control input-flat" id="image_url_get">
-                                    </div>
-
-                                <script>
-
-                                    $("#image_url_get").pasteUploadImage('/mdeditor/uploads/?guid=1608644192273');
-                                </script>
 
 
                                 </div>
