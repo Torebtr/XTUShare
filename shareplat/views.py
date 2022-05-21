@@ -1,3 +1,4 @@
+import datetime
 import hashlib
 
 from django.http import HttpResponseRedirect
@@ -11,7 +12,7 @@ from shareplat.models import User, Update_log, Article
 
 def page_main(request):
     try:
-        current_user = User.objects.filter(is_lock=0).get(id=int(request.session['user']))
+        current_user = User.objects.filter().get(id=int(request.session['user']))
     except:
         current_user = None
     if request.method == "GET":
@@ -62,7 +63,6 @@ def login(request):
             user = User.objects.get(username=username)
             if user.password == encry_password:
                 request.session['user'] = user.id
-                user.login_fail = 0
                 user.save()
                 request.session.set_expiry(36000)
                 return HttpResponseRedirect('/XTUShare/main/')
@@ -79,3 +79,38 @@ def login(request):
                 'info': '账号或密码错误'
             }
             return render(request, 'login.html', context=context)
+
+
+def register(request):
+    if request.method == "GET":
+        return render(request,'register.html')
+    else:
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+
+        m = hashlib.md5(password.encode())
+        encry_password = m.hexdigest()
+
+        if User.objects.filter(username=username).count() > 0:
+            context = {
+                'username': username,
+                'password': password,
+                'name': name,
+                'email': email,
+                'info': '该用户名已被注册'
+            }
+            return render(request, 'register.html', context=context)
+        user = User.objects.create(
+            username=username,
+            password=encry_password,
+            email=email,
+            name=name,
+            create_time=datetime.datetime.now()
+        )
+        user.save()
+        context ={
+            'info': '注册成功'
+        }
+        return render(request, 'register.html', context=context)
