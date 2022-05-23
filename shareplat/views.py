@@ -1,6 +1,8 @@
 import datetime
 import hashlib
+import json
 
+from django.db.models import Q
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from shareplat.func import *
@@ -108,6 +110,17 @@ def register(request):
                 'info': '该用户名已被注册'
             }
             return render(request, 'register.html', context=context)
+
+        if User.objects.filter(email=email).count() > 0:
+            context = {
+                'username': username,
+                'password': password,
+                'name': name,
+                'email': email,
+                'info': '该邮箱已被注册'
+            }
+            return render(request, 'register.html', context=context)
+
         user = User.objects.create(
             username=username,
             password=encry_password,
@@ -244,4 +257,154 @@ def delete_article(request):
             }
         context = json.dumps(context)
         return JsonResponse(context, safe=False)
+
+
+def go_set_classify(request):
+    try:
+        current_user = User.objects.filter().get(id=int(request.session['user']))
+    except:
+        return HttpResponseRedirect('/XTUShare/login/')
+
+    if request.method == "POST":
+        article_ids = request.POST.getlist('article_ids')
+        new_articles = []
+        for select_article_id in article_ids:
+            article = Article.objects.get(id=int(select_article_id))
+            if article.title.__len__() > 20:
+                article.title = article.title[:20] + '...'
+            try:
+                tags = article.tags.split(',')
+                if '' in tags:
+                    tags.remove('')
+            except:
+                tags = []
+            new_articles.append(
+                Article_temp(
+                    article,
+                    tags
+                )
+            )
+
+        classifys = Classify.objects.all().order_by('name')
+        context = {
+            'article_ids':article_ids,
+            'classifys':classifys,
+            'current_user':current_user,
+            'new_articles':new_articles
+        }
+        return render(request,'set_classify.html',context=context)
+
+
+def set_classify(request):
+    try:
+        current_user = User.objects.filter().get(id=int(request.session['user']))
+    except:
+        return HttpResponseRedirect('/XTUShare/login/')
+
+    if request.method == "POST":
+        article_ids = request.POST.getlist('article_ids')
+        select_classify = request.POST.get('select_classify')
+        classify = Classify.objects.get(id=int(select_classify))
+        for article_id in article_ids:
+            article = Article.objects.get(id=int(article_id))
+            if article.author != current_user:
+                continue
+            article.classify = classify
+            article.save()
+        return HttpResponseRedirect('/XTUShare/myarticle/1/')
+
+
+def go_set_tags(request):
+    try:
+        current_user = User.objects.filter().get(id=int(request.session['user']))
+    except:
+        return HttpResponseRedirect('/XTUShare/login/')
+
+    if request.method == "POST":
+        article_ids = request.POST.getlist('article_ids')
+        new_articles = []
+        for select_article_id in article_ids:
+            article = Article.objects.get(id=int(select_article_id))
+            if article.title.__len__() > 20:
+                article.title = article.title[:20] + '...'
+            try:
+                tags = article.tags.split(',')
+                if '' in tags:
+                    tags.remove('')
+            except:
+                tags = []
+            new_articles.append(
+                Article_temp(
+                    article,
+                    tags
+                )
+            )
+
+        tags = Tag.objects.all().order_by('name')
+        context = {
+            'article_ids':article_ids,
+            'tags':tags,
+            'current_user':current_user,
+            'new_articles':new_articles
+        }
+        return render(request,'set_classify.html',context=context)
+
+
+def set_tags(request):
+    try:
+        current_user = User.objects.filter().get(id=int(request.session['user']))
+    except:
+        return HttpResponseRedirect('/XTUShare/login/')
+
+    if request.method == "POST":
+        article_ids = request.POST.getlist('article_ids')
+        select_tags = request.POST.get('select_tags')
+        append_tags = ''
+        for tag in select_tags:
+            append_tags += tag + ','
+        for article_id in article_ids:
+            article = Article.objects.get(id=int(article_id))
+            if article.author != current_user:
+                continue
+            if article.tags == None:
+                article.tags = append_tags
+            else:
+                article.tags += append_tags
+            article.save()
+        return HttpResponseRedirect('/XTUShare/myarticle/1/')
+
+
+def search_result(request):
+    try:
+        current_user = User.objects.filter().get(id=int(request.session['user']))
+    except:
+        return HttpResponseRedirect('/XTUShare/login/')
+
+    keytext = request.POST.get('keytext')
+    all_article = Article.objects.filter(
+Q(state=3) & (Q(title__icontains=keytext) | Q(content__icontains=keytext))).order_by('-update_time')
+
+    all_article_temps = []
+    for article in all_article:
+        article.content = article.content[:60] + '...'
+        try:
+            tags = article.tags.split(',')
+            if '' in tags:
+                tags.remove('')
+        except:
+            tags = []
+        all_article_temps.append(
+            Article_temp(
+                article=article,
+                tags=tags
+            )
+        )
+    context = {
+        'current_user': current_user,
+        'all_article': all_article_temps,
+        'keytext': keytext
+    }
+
+    return render(request, 'search_result.html', context=context)
+
 

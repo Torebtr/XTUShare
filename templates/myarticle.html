@@ -45,7 +45,7 @@
                 <ul>
                     <li><a href="/XTUShare/main/"><i class="ti-home"></i>&nbsp;&nbsp;首页</a></li>
                     <li><a href="/XTUShare/library/"><i class="ti-harddrives"></i>&nbsp;&nbsp;文库</a></li>
-                    <li><a href="/XTUShare/myarticle/1/"><i class="ti-save-alt"></i>&nbsp;&nbsp;我的文章</a></li>
+                    <li><a href="/XTUShare/myarticle/1/" style="color: #ee0b0b"><i class="ti-save-alt"></i>&nbsp;&nbsp;我的文章</a></li>
 
                     <li><a href="/XTUShare/classify_manage/"><i class="ti-tag"></i>&nbsp;&nbsp;分类管理</a></li>
                     <li><a href="/XTUShare/tools_manage/"><i class="ti-import"></i>&nbsp;&nbsp;代码&工具管理</a></li>
@@ -181,7 +181,7 @@
                                         {% for article in my_articles %}
                                             <tr>
                                                 <th scope="row">{{ forloop.counter }}</th>
-                                                <td><input type="checkbox" name="select_article_ids" value="{{ article.article.id }}"></td>
+                                                <td><input type="checkbox" name="article_ids" value="{{ article.article.id }}"></td>
                                                 <td width="20%">{{ article.article.title }}</td>
                                                 <td width="8%">{{ article.article.author.name }}</td>
                                                 <td>{{ article.article.classify.name }}</td>

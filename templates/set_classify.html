@@ -199,7 +199,7 @@
                                         {% csrf_token %}
                                         {% for article in new_articles %}
                                             <tr id="select_article_id_{{ article.article.id }}">
-                                            <input type="checkbox" name="select_article_ids" value="{{ article.article.id }}" checked hidden>
+                                            <input type="checkbox" name="article_ids" value="{{ article.article.id }}" checked hidden>
                                                 <th scope="row">{{ forloop.counter }}</th>
                                                 <td width="20%">{{ article.article.title }}</td>
                                                 <td width="8%">{{ article.article.author.name }}</td>
