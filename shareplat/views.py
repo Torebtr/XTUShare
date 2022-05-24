@@ -407,4 +407,119 @@ Q(state=3) & (Q(title__icontains=keytext) | Q(content__icontains=keytext))).orde
 
     return render(request, 'search_result.html', context=context)
 
+def library(request):
+    try:
+        current_user = User.objects.filter().get(id=int(request.session['user']))
+    except:
+        return HttpResponseRedirect('/XTUShare/login/')
 
+    if request.method == 'GET':
+        all_articles = Article.objects.filter(state=3).order_by('-update_time')
+        all_classify = Classify.objects.all().order_by('name')
+        all_user = User.objects.all().order_by('name')
+        all_tags = Tag.objects.all().order_by('name')
+
+        all_article_dict = {}
+        for classify in all_classify:
+            all_article_dict[classify] = all_articles.filter(classify_id=classify.id)
+
+        context = {
+            'current_user': current_user,
+            'all_article': all_article_dict,
+            'all_classify': all_classify,
+            'all_article_num': all_articles.count(),
+            'all_users': all_user,
+            'all_tags': all_tags,
+            'show_tag_state': 1,
+        }
+
+        return render(request, 'library.html', context=context)
+
+
+def search_author(request):
+    try:
+        current_user = User.objects.filter().get(id=int(request.session['user']))
+    except:
+        return HttpResponseRedirect('/XTUShare/login/')
+
+    if request.method == 'POST':
+        auther = request.POST.get('auther_name')
+        try:
+            user = User.objects.get(id=int(auther))
+        except:
+            context = {
+                'current_user': current_user,
+                'info': '没有该用户',
+            }
+            return render(request, 'show_info.html', context=context)
+
+        all_articles = Article.objects.filter(state=3).filter(auther=user).order_by('-update_time')
+        all_classify = Classify.objects.all().order_by('name')
+        all_user = User.objects.all().order_by('name')
+        all_tags = Tag.objects.all().order_by('name')
+
+        all_article_dict = {}
+        for classify in all_classify:
+            all_article_dict[classify] = all_articles.filter(classify_id=classify.id)
+
+        context = {
+            'current_user': current_user,
+            'all_article': all_article_dict,
+            'all_classify': all_classify,
+            'all_article_num': all_articles.count(),
+            'all_users': all_user,
+            'all_tags': all_tags,
+            'search_user': user.id,
+            'search_tag': 'null'
+        }
+        return render(request, 'library.html', context=context)
+    else:
+        context = {
+            'current_user': current_user,
+            'info': '不支持该请求方法',
+        }
+        return render(request, 'show_info.html', context=context)
+
+def search_tag(request):
+    try:
+        current_user = User.objects.filter().get(id=int(request.session['user']))
+    except:
+        return HttpResponseRedirect('/XTUShare/login/')
+
+    if request.method == 'POST':
+        tag_name = request.POST.get('tag_name')
+        try:
+            tag = Tag.objects.get(id=int(tag_name))
+        except:
+            context = {
+                'current_user': current_user,
+                'info': '没有该标签',
+            }
+            return render(request, 'show_info.html', context=context)
+        all_article = Article.objects.filter(state=3).filter(tags__contains=str(tag.id) + ',').order_by('-update_time')
+        all_classify = Classify.objects.all().order_by('name')
+        all_users = User.objects.all().order_by('name')
+        all_tags = Tag.objects.all().order_by('name')
+
+        all_article_dict = {}
+        for classify in all_classify:
+            all_article_dict[classify] = all_article.filter(classify_id=classify.id)
+
+        context = {
+            'current_user': current_user,
+            'all_article': all_article_dict,
+            'all_classify': all_classify,
+            'all_article_num': all_article.count(),
+            'all_users': all_users,
+            'all_tags': all_tags,
+            'search_tag': tag.id,
+            'search_user': 'null'
+        }
+        return render(request, 'library.html', context=context)
+        # return render(request, 'search_result.html', context=context)
+    else:
+        context = {
+            'current_user': current_user,
+            'info': '不支持该请求方法',
+        }
+        return render(request, 'show_info.html', context=context)

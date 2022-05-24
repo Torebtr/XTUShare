@@ -48,7 +48,7 @@
                     <li><a href="/XTUShare/myarticle/1/" style="color: #ee0b0b"><i class="ti-save-alt"></i>&nbsp;&nbsp;我的文章</a></li>
 
                     <li><a href="/XTUShare/classify_manage/"><i class="ti-tag"></i>&nbsp;&nbsp;分类管理</a></li>
-                    <li><a href="/XTUShare/tools_manage/"><i class="ti-import"></i>&nbsp;&nbsp;代码&工具管理</a></li>
+
 
                     <li><a href="/XTUShare/my_setting/"><i class="ti-settings"></i>&nbsp;&nbsp;我的设置</a></li>
 
@@ -226,39 +226,6 @@
                                 </div>
 							</div><!-- /# card -->
 						</div><!-- /# column -->
-
-
-
-                        <div class="col-lg-12">
-                            <div class="card alert">
-                                <div class="card-header">
-                                    <h4>快速搜索</h4>
-                                    <div class="card-header-right-icon">
-                                        <ul>
-                                            <li class="card-close" data-dismiss="alert"><i class="ti-close"></i></li>
-
-                                        </ul>
-                                    </div>
-                                </div>
-                                <div class="card-body">
-                                    <div class="basic-form">
-                                        <form method="post" action="/XTUShare/search_article/">
-                                            {% csrf_token %}
-                                            <div class="form-group">
-                                                <p class="text-muted m-b-15 f-s-12">请将你要查找的<code>关键字</code>输入在下方输入框,检索范围:<code>标题</code><code>内容</code></p>
-                                                <div class="input-group input-group-rounded">
-                                                    <input type="text" placeholder="关键字" name="keytext" class="form-control" value="{{ keytext }}">
-                                                    <span class="input-group-btn"><button class="btn btn-primary btn-group-right" type="submit"><i class="ti-search"></i></button></span>
-                                                </div>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-
-
 
 
                     </div>

@@ -17,4 +17,7 @@ urlpatterns = [
     path('go_set_tags/',views.go_set_tags,name='go_set_tags'),
     path('set_tags/',views.set_tags,name='set_tags'),
     path('search_result/',views.search_result,name='search_result'),
+    path('library/',views.library,name='library'),
+    path('search_author/',views.search_author,name='search_author'),
+    path('search_tag/',views.search_tag,name='search_tag'),
 ]

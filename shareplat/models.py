@@ -45,7 +45,7 @@ class Article(models.Model): # 文章
     create_time = models.DateTimeField(null=False)
     update_time = models.DateTimeField(auto_now=False)
     author = models.ForeignKey('User',on_delete=models.SET_NULL,null=True)
-    state = models.IntegerField(default=0)
+    state = models.IntegerField(default=0)     # 3为发布 1为暂存 2为发送审核
     read_num = models.IntegerField(default=0)
     back_info = models.TextField(default='')
     type = models.IntegerField(default=0)
