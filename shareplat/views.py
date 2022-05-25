@@ -523,3 +523,121 @@ def search_tag(request):
             'info': '不支持该请求方法',
         }
         return render(request, 'show_info.html', context=context)
+
+
+def classify_manage(request):
+    try:
+        current_user = User.objects.filter().get(id=int(request.session['user']))
+    except:
+        return HttpResponseRedirect('/XTUShare/login/')
+
+    if request.method == 'GET':
+        all_classify = Classify.objects.all().order_by('create_time')
+        new_all_classify = []
+        for classify in all_classify:
+            new_all_classify.append(
+                Classify_temp(
+                    classify=classify,
+                    article_num=Article.objects.filter(state=3).filter(classify=classify).count()
+                )
+            )
+        all_tags = Tag.objects.all().order_by('create_time')
+        new_all_tag = []
+        for tag in all_tags:
+            new_all_tag.append(
+                Tag_temp(
+                    tag=tag,
+                    article_num=get_tag_article(tag.id)
+                )
+            )
+        context = {
+            'current_user': current_user,
+            'all_classify': new_all_classify,
+            'all_tag': new_all_tag,
+        }
+        return render(request, 'classify_manage.html', context=context)
+
+
+def add_classify(request):
+    try:
+        current_user = User.objects.filter().get(id=int(request.session['user']))
+    except:
+        return HttpResponseRedirect('/XTUShare/login/')
+
+    if request.method == 'GET':
+        context = {
+            'current_user': current_user,
+        }
+        return render(request, 'add_classify.html', context=context)
+    else:
+        new_classify = request.POST.get('classify_name')
+        try:
+            Classify.objects.create(
+                name=new_classify
+            )
+            return HttpResponseRedirect('/XTUShare/classify_manage/')
+        except:
+            context = {
+                'current_user': current_user,
+                'info': 'error  栏目名称重复，请重新输入'
+            }
+            return render(request, 'add_classify.html', context=context)
+
+
+def add_tag(request):
+    try:
+        current_user = User.objects.filter().get(id=int(request.session['user']))
+    except:
+        return HttpResponseRedirect('/XTUShare/login/')
+
+    if request.method == 'GET':
+        context = {
+            'current_user': current_user,
+        }
+        return render(request, 'add_tag.html', context=context)
+    else:
+        new_tag = request.POST.get('tag_name')
+        try:
+            Tag.objects.create(
+                name=new_tag
+            )
+            return HttpResponseRedirect('/XTUShare/classify_manage/')
+        except:
+            context = {
+                'current_user': current_user,
+                'info': 'error  标签名称重复，请重新输入'
+            }
+            return render(request, 'add_tag.html', context=context)
+
+
+def delete_classify(request):
+    try:
+        current_user = User.objects.filter().get(id=int(request.session['user']))
+    except:
+        return HttpResponseRedirect('/XTUShare/login/')
+
+    if request.method == 'POST':
+        classify_id = request.POST.get('classify_id')
+        classify = Classify.objects.get(id=int(classify_id))
+        classify.delete()
+        context = {
+            'info':'删除成功'
+        }
+        context = json.dumps(context)
+        return JsonResponse(context, safe=False)
+
+def delete_tag(request):
+    try:
+        current_user = User.objects.filter().get(id=int(request.session['user']))
+    except:
+        return HttpResponseRedirect('/XTUShare/login/')
+
+    if request.method == 'POST':
+        tag_id = request.POST.get('tag_id')
+        tag = Tag.objects.get(id=int(tag_id))
+        tag.delete()
+        context = {
+            'info':'删除成功'
+        }
+        context = json.dumps(context)
+        return JsonResponse(context, safe=False)

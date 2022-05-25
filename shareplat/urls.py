@@ -20,4 +20,9 @@ urlpatterns = [
     path('library/',views.library,name='library'),
     path('search_author/',views.search_author,name='search_author'),
     path('search_tag/',views.search_tag,name='search_tag'),
+    path('classify_manage/', views.classify_manage, name='classify_manage'),
+    path('add_classify/', views.add_classify, name='add_classify'),
+    path('add_tag/',views.add_tag,name='add_tag'),
+    path('delete_classify/', views.delete_classify, name='delete_classify'),
+    path('delete_tag/', views.delete_tag, name='delete_tag'),
 ]
