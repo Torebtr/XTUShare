@@ -25,4 +25,12 @@ urlpatterns = [
     path('add_tag/',views.add_tag,name='add_tag'),
     path('delete_classify/', views.delete_classify, name='delete_classify'),
     path('delete_tag/', views.delete_tag, name='delete_tag'),
+
+    path('my_setting/',views.my_setting,name='my_setting'),
+
+    path('verify/', views.verify, name='verify'),
+    path('preview/<article_id>/',views.preview,name='preview'),
+    path('back_article/',views.back_article,name='back_article'),
+    path('verify_article/<article_id>/',views.verify_article,name='verify_article'),
+    path('show_back_info/',views.show_back_info,name='show_back_info'),
 ]

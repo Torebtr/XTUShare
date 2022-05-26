@@ -133,42 +133,11 @@
                                     {% endif %}
 
                                     <div align="right">
-                                        <button type="button" class="btn btn-danger m-l-10 m-b-10" onclick="change_collect()" id="collect_text">{% if current_user_collect_state == 1 %}已收藏{% else %}收藏{% endif %} <span class="badge" id="collect_num">{{ collec_num }}</span></button>
                                         <button type="button" class="btn btn-primary m-l-10 m-b-10">阅读数 <span class="badge">{{ article.article.read_num }}</span></button>
                                     </div>
                                     <div style="height: 25px">
 
                                     </div>
-                                <script>
-                                    function change_collect() {
-                                        myajax.post({
-                                            'url':'/XTUShare/collect/',
-                                            'dataType':'json',
-                                            'data':{
-                                                'article_id':{{ article.article.id }},
-                                            },
-                                            'success':function (data) {
-                                                var dataObj = JSON.parse(data);
-                                                    if(dataObj.info=="ok"){
-                                                        if (dataObj.state == "delete"){
-                                                            $("#collect_text").html(
-                                                                "收藏 <span class=\"badge\" id=\"collect_num\">" + dataObj.collect_num + "</span>"
-                                                            )
-                                                        }else {
-                                                            $("#collect_text").html(
-                                                                "已收藏 <span class=\"badge\" id=\"collect_num\">" + dataObj.collect_num + "</span>"
-                                                            )
-                                                        }
-                                                    }else{
-                                                        alert('错误');
-                                                    }
-                                            },
-                                            'fail':function (error) {
-                                                alert("未知错误！");
-                                            }
-                                        });
-                                    }
-                                </script>
 
                                     <div style="width: 100%">
                                     {{ article.article.content|safe }}

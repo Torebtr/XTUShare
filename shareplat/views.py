@@ -641,3 +641,187 @@ def delete_tag(request):
         }
         context = json.dumps(context)
         return JsonResponse(context, safe=False)
+
+
+def my_setting(request):
+    try:
+        current_user = User.objects.filter().get(id=int(request.session['user']))
+    except:
+        return HttpResponseRedirect('/XTUShare/login/')
+
+    if request.method == 'GET':
+        name = current_user.name
+        email = current_user.email
+        context = {
+            'current_user': current_user,
+            'name': name,
+            'email': email
+        }
+        return render(request, 'my_setting.html', context=context)
+    else:
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        current_user.name = name
+        current_user.email = email
+        current_user.save()
+        context = {
+            'current_user': current_user,
+            'info': '修改成功',
+            'name': name,
+            'email': email
+        }
+        return render(request, 'my_setting.html', context=context)
+
+
+def verify(request):
+    try:
+        current_user = User.objects.filter().get(id=int(request.session['user']))
+    except:
+        return HttpResponseRedirect('/XTUShare/login/')
+
+    if current_user.username != "XTUShare":
+        context = {
+            'current_user':current_user,
+            'info':'您无权访问该功能'
+        }
+        return render(request,'show_info.html',context=context)
+
+    if request.method == 'GET':
+        verify_articles = Article.objects.filter(state=2)
+        new_articles = []
+        for article in verify_articles:
+            if article.title.__len__() > 20:
+                article.title = article.title[:20] + '...'
+            try:
+                tags = article.tags.split(',')
+                if '' in tags:
+                    tags.remove('')
+            except:
+                tags = []
+            new_articles.append(
+                Article_temp(
+                    article,
+                    tags
+                )
+            )
+        context = {
+            'current_user': current_user,
+            'my_articles': new_articles,
+        }
+        return render(request, 'verify.html', context=context)
+
+
+def preview(request,article_id):
+    try:
+        current_user = User.objects.filter().get(id=int(request.session['user']))
+    except:
+        return HttpResponseRedirect('/XTUShare/login/')
+
+    if request.method == "GET":
+        try:
+            article = Article.objects.get(id=int(article_id))
+        except:
+            context = {
+                'current_user':current_user,
+                'info':'文章不存在'
+            }
+            return render(request,'show_info.html',context=context)
+
+        try:
+            tags = article.tags.split(',')
+            if '' in tags:
+                tags.remove('')
+        except:
+            tags = []
+
+        article_temp = Article_temp(
+            article=article,
+            tags=tags
+        )
+        if article.state == 1 and article.author == current_user or current_user.username == "XTUShare":
+            article.content = markdown.markdown(article.content, extensions=[
+                'markdown.extensions.extra',
+                'markdown.extensions.codehilite',
+                'markdown.extensions.toc',
+            ])
+            article.content = article.content.replace('<img alt=', '<img style="width: 50%" alt=').replace('(','（').replace(')','）')
+            context = {
+                'current_user': current_user,
+                'article': article_temp
+            }
+            return render(request, 'article_detail.html', context=context)
+        else:
+            context = {
+                'current_user': current_user,
+                'info':'权限不足'
+            }
+            return render(request,'show_info.html',context=context)
+
+
+def back_article(request):
+    try:
+        current_user = User.objects.filter().get(id=int(request.session['user']))
+    except:
+        return HttpResponseRedirect('/XTUShare/login/')
+
+    if current_user.username != "XTUShare":
+        context = {
+            'current_user': current_user,
+            'info': '权限不足'
+        }
+        return render(request, 'show_info.html', context=context)
+
+    if request.method == "POST":
+        article_id = request.POST.get('article_id')
+        back_info = request.POST.get('back_info')
+        article = Article.objects.get(id=int(article_id))
+        article.state = 4
+        article.back_info = back_info
+        article.save()
+        context = {
+            'info': 'ok'
+        }
+        context = json.dumps(context)
+        return JsonResponse(context,safe=False)
+
+
+def verify_article(request,article_id):
+    try:
+        current_user = User.objects.filter().get(id=int(request.session['user']))
+    except:
+        return HttpResponseRedirect('/XTUShare/login/')
+
+    if current_user.username != "XTUShare":
+        context = {
+            'current_user': current_user,
+            'info': '权限不足'
+        }
+        return render(request, 'show_info.html', context=context)
+
+    if request.method == "GET":
+        article = Article.objects.get(id=int(article_id))
+        article.state = 3
+        article.save()
+        return HttpResponseRedirect('/XTUShare/verify/')
+
+
+def show_back_info(request):
+    try:
+        current_user = User.objects.filter().get(id=int(request.session['user']))
+    except:
+        return HttpResponseRedirect('/XTUShare/login/')
+
+    if request.method == "POST":
+        article_id = request.POST.get('article_id')
+        article = Article.objects.get(id=int(article_id))
+        if article.author == current_user or current_user.username == "XTUShare":
+            context = {
+                'info':'ok',
+                'back_info':article.back_info
+            }
+        else:
+            context = {
+                'info': 'error',
+            }
+        context = json.dumps(context)
+        return JsonResponse(context,safe=False)
