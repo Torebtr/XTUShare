@@ -33,4 +33,8 @@ urlpatterns = [
     path('back_article/',views.back_article,name='back_article'),
     path('verify_article/<article_id>/',views.verify_article,name='verify_article'),
     path('show_back_info/',views.show_back_info,name='show_back_info'),
+    path('user_manage/<page_num>/',views.user_manage,name='user_manage'),
+    path('add_user/',views.add_user,name='add_user'),
+    path('edite_user/<user_id>/',views.edite_user,name='edite_user'),
+    path('delete_user/',views.delete_user,name='delete_user'),
 ]

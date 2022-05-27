@@ -825,3 +825,168 @@ def show_back_info(request):
             }
         context = json.dumps(context)
         return JsonResponse(context,safe=False)
+
+
+def user_manage(request, page_num):
+    try:
+        current_user = User.objects.filter().get(id=int(request.session['user']))
+    except:
+        return HttpResponseRedirect('/XTUShare/login/')
+
+    if request.method == 'GET':
+        page_num = int(page_num)-1
+        if current_user.username == 'XTUShare':
+            all_user = User.objects.all().order_by('create_time')
+            user_in_page = all_user[page_num*10:page_num*10 + 10]
+            page_sum = int(all_user.count() / 10) + 1
+            if page_num < 0 or page_num >= page_sum:
+                context = {
+                    'current_user': current_user,
+                    'info': '页码有误'
+                }
+                return render(request, 'show_info.html', context=context)
+            new_all_user = []
+            for user in user_in_page:
+                article_num = Article.objects.filter(author=user).count()
+                new_all_user.append(
+                    Author(
+                        author=user,
+                        article_num=article_num,
+                        invitation_user=user.invitation_user
+                    )
+                )
+            context = {
+                'current_user': current_user,
+                'all_user': new_all_user,
+                'page_num': page_num + 1,
+                'page_sum': page_sum,
+                'pre_num': page_num,
+                'next_num': page_num + 2,
+            }
+            return render(request, 'user_manage.html', context=context)
+        else:
+            context = {
+                'current_user': current_user,
+                'info': '您没有权限访问该功能'
+            }
+            return render(request, 'show_info.html', context=context)
+
+
+def add_user(request):
+    try:
+        current_user = User.objects.filter().get(id=int(request.session['user']))
+    except:
+        return HttpResponseRedirect('/XTUShare/login/')
+
+    if current_user.username == 'XTUShare':
+        if request.method == 'GET':
+            context = {
+                'current_user': current_user
+            }
+            return render(request, 'add_user.html', context=context)
+        else:
+            username = request.POST.get('username')
+            name = request.POST.get('name')
+            password = request.POST.get('password')
+            email = request.POST.get('email')
+            pwd = hashlib.md5(password.encode())
+            encry_password =pwd.hexdigest()
+            try:
+                if User.objects.filter(username=username).count() > 0 :
+                    context = {
+                        'current_user': current_user,
+                        'info': '添加异常，用户名重复'
+                    }
+                    return render(request, 'add_user.html', context=context)
+                User.objects.create(
+                    username=username,
+                    name=name,
+                    email=email,
+                    password=encry_password,
+                    create_time=datetime.datetime.now()
+                )
+                return HttpResponseRedirect('/XTUShare/user_manage/1/')
+            except:
+                context = {
+                    'current_user': current_user,
+                    'info': '添加异常，请检查输入或者换个用户名'
+                }
+                return render(request, 'add_user.html', context=context)
+    else:
+        context = {
+            'current_user': current_user,
+            'info': '权限不足'
+        }
+        return render(request, 'show_info.html', context=context)
+
+
+def edite_user(request, user_id):
+    try:
+        current_user = User.objects.filter().get(id=int(request.session['user']))
+    except:
+        return HttpResponseRedirect('/XTUShare/login/')
+
+    if current_user.username == "XTUShare":
+        if request.method == "GET":
+            try:
+                user = User.objects.get(id=int(user_id))
+                context = {
+                    'current_user': current_user,
+                    'user':user
+                }
+                return render(request,'edite_user.html',context=context)
+            except:
+                context = {
+                    'current_user': current_user,
+                    'info':'用户不存在'
+                }
+                return render(request,'edite_user.html',context=context)
+        else:
+            username = request.POST.get('username')
+            name = request.POST.get('name')
+            email = request.POST.get('email')
+            user = User.objects.get(id=int(user_id))
+            user.username = username
+            user.name = name
+            user.email = email
+            user.save()
+            return HttpResponseRedirect('/Gr33kLibrary/user_manage/1/')
+    else:
+        context = {
+            'current_user': current_user,
+            'info': '权限不足'
+        }
+        return render(request, 'show_info.html', context=context)
+
+
+def delete_user(request):
+    try:
+        current_user = User.objects.filter().get(id=int(request.session['user']))
+    except:
+        return HttpResponseRedirect('/XTUShare/login/')
+
+    if current_user.username == "XTUShare":
+        if request.method == "POST":
+            user_id = request.POST.get('user_id')
+            try:
+                user = User.objects.get(id=int(user_id))
+                user.delete()
+                context = {
+                    'info':'删除成功'
+                }
+                context = json.dumps(context)
+                return JsonResponse(context,safe=False)
+            except:
+                all_user = User.objects.all()
+                context = {
+                    'current_user': current_user,
+                    'all_user':all_user,
+                    'info':'用户不存在'
+                }
+                return render(request, 'user_manage.html', context=context)
+        else:
+            context = {
+                'current_user': current_user,
+                'info': '您没有权限访问该功能'
+            }
+            return render(request, 'show_info.html', context=context)
