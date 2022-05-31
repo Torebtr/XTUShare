@@ -232,6 +232,131 @@ def create_article(request):
         return HttpResponseRedirect('/XTUShare/myarticle/1/')
 
 
+def edite_article(request, article_id):
+    try:
+        current_user = User.objects.filter().get(id=int(request.session['user']))
+    except:
+        return HttpResponseRedirect('/XTUShare/login/')
+
+    if request.method == "GET":
+        article = Article.objects.get(id=int(article_id))
+        if current_user == article.author or current_user.username == "XTUShare":
+            try:
+                tags = article.tags.split(',')
+                if '' in tags:
+                    tags.remove('')
+            except:
+                tags = []
+            new_tags = []
+            for tag in tags:
+                new_tags.append(int(tag))
+            context = {
+                'current_user': current_user,
+                'article':article,
+                'tags':new_tags,
+                'all_tags':Tag.objects.all(),
+                'all_classify':Classify.objects.all(),
+            }
+            return render(request,'edite_article.html',context=context)
+        else:
+            context = {
+                'current_user': current_user,
+                'info':'您无权操作该文章'
+            }
+            return render(request,'show_info.html',context=context)
+    else:
+        article =Article.objects.get(id=int(article_id))
+        title = request.POST.get('title')
+        classify = Classify.objects.get(id=int(request.POST.get('classify')))
+        tags = request.POST.getlist('tag')
+        content = request.POST.get('content')
+        action = request.POST.get('action')
+        article_type = request.POST.get('article_type')
+        article_link = request.POST.get('article_link')
+        if current_user == article.author or current_user.username == "Gr33k":
+            article.title = title
+            article.classify = classify
+            article.tags = list2str(tags)
+            article.content = content
+            article.type = int(article_type)
+            article.article_link = article_link
+            article.update_time = datetime.datetime.now()
+            if action == "save":
+                article.state = 1
+            else:
+                article.state = 2
+            article.save()
+            tags = article.tags.split(',')
+            if '' in tags:
+                tags.remove('')
+            new_tags = []
+            for tag in tags:
+                new_tags.append(int(tag))
+            context = {
+                'current_user': current_user,
+                'article': article,
+                'tags': new_tags,
+                'all_tags': Tag.objects.all(),
+                'all_classify': Classify.objects.all(),
+                'info':'<script>alert("保存成功")</script>',
+            }
+            return render(request,'edite_article.html',context=context)
+        else:
+            context = {
+                'current_user': current_user,
+                'info': '您无权操作该文章'
+            }
+            return render(request, 'show_info.html', context=context)
+
+
+def article_detail(request,article_id):
+    try:
+        current_user = User.objects.filter().get(id=int(request.session['user']))
+    except:
+        return HttpResponseRedirect('/XTUShare/login/')
+
+    if request.method == "GET":
+        article = Article.objects.get(id=int(article_id))
+        article.read_num += 1
+        article.save()
+        if article.state == 3:
+            article.content = markdown.markdown(article.content, extensions=[
+                'markdown.extensions.extra',
+                'markdown.extensions.codehilite',
+                'markdown.extensions.toc',
+            ])
+            article.content = article.content.replace('<img alt=', '<img style="width: 50%" alt=')
+            try:
+                tags = article.tags.split(',')
+                if '' in tags:
+                    tags.remove('')
+            except:
+                tags = []
+            article_temp = Article_temp(
+                article=article,
+                tags=tags
+            )
+            collecs = Collect.objects.filter(article=article)
+            collec_num = collecs.count()
+            if collecs.filter(user=current_user).count() > 0:
+                current_user_collect_state = 1
+            else:
+                current_user_collect_state = 0
+            context = {
+                'current_user': current_user,
+                'article': article_temp,
+                'collec_num': collec_num,
+                'current_user_collect_state': current_user_collect_state
+            }
+            return render(request, 'article_detail.html', context=context)
+        else:
+            context = {
+                'current_user': current_user,
+                'info': '没有找到这篇文章'
+            }
+            return render(request, 'show_info.html', context=context)
+
+
 def delete_article(request):
     try:
         current_user = User.objects.filter().get(id=int(request.session['user']))
@@ -442,32 +567,31 @@ def search_author(request):
     except:
         return HttpResponseRedirect('/XTUShare/login/')
 
-    if request.method == 'POST':
-        auther = request.POST.get('auther_name')
+    if request.method == "POST":
+        author_name = request.POST.get('author_name')
         try:
-            user = User.objects.get(id=int(auther))
+            user = User.objects.get(id=int(author_name))
         except:
             context = {
                 'current_user': current_user,
                 'info': '没有该用户',
             }
             return render(request, 'show_info.html', context=context)
-
-        all_articles = Article.objects.filter(state=3).filter(auther=user).order_by('-update_time')
+        all_article = Article.objects.filter(state=3).filter(author=user).order_by('-update_time')
         all_classify = Classify.objects.all().order_by('name')
-        all_user = User.objects.all().order_by('name')
+        all_users = User.objects.all().order_by('name')
         all_tags = Tag.objects.all().order_by('name')
 
         all_article_dict = {}
         for classify in all_classify:
-            all_article_dict[classify] = all_articles.filter(classify_id=classify.id)
+            all_article_dict[classify] = all_article.filter(classify_id=classify.id)
 
         context = {
             'current_user': current_user,
             'all_article': all_article_dict,
             'all_classify': all_classify,
-            'all_article_num': all_articles.count(),
-            'all_users': all_user,
+            'all_article_num': all_article.count(),
+            'all_users': all_users,
             'all_tags': all_tags,
             'search_user': user.id,
             'search_tag': 'null'
