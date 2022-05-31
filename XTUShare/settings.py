@@ -11,6 +11,9 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
 import os
+import pymysql
+
+pymysql.install_as_MySQLdb()
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -25,7 +28,7 @@ SECRET_KEY = '$k*!!q1&0of2@3-g6jq=k6ynnu8g74j=gp$@q(t+5t(+l1*8_#'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -78,8 +81,8 @@ WSGI_APPLICATION = 'XTUShare.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'zslibrary',
-        'USER': 'zslibrary',
+        'NAME': 'xtushare',
+        'USER': 'xtushare',
         'PASSWORD': 'admin123',
         'HOST': '127.0.0.1',
         'PORT': '3306',
@@ -157,7 +160,6 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (os.path.join('static'),)
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'uploads')  #uploads必须存在，且在项目目录下
 MEDIA_URL = '/media/'
 
 STATIC_ROOT = '/var/web'
