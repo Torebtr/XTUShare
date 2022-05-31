@@ -990,3 +990,43 @@ def delete_user(request):
                 'info': '您没有权限访问该功能'
             }
             return render(request, 'show_info.html', context=context)
+
+
+def change_password(request):
+    try:
+        current_user = User.objects.filter().get(id=int(request.session['user']))
+    except:
+        return HttpResponseRedirect('/XTUShare/login/')
+
+    if request.method == "GET":
+        context = {
+            'current_user':current_user
+        }
+        return render(request,'change_password.html',context=context)
+    else:
+        password = request.POST.get('password')
+        new_password = request.POST.get('new_password')
+        re_new_password = request.POST.get('re_new_password')
+        if new_password == re_new_password:
+            m = hashlib.md5(password.encode())
+            encry_password = m.hexdigest()
+            if current_user.password == encry_password:
+                m = hashlib.md5(new_password.encode())
+                new_encry_password = m.hexdigest()
+                current_user.password = new_encry_password
+                current_user.save()
+                context = {
+                    'current_user': current_user,
+                    'info':'修改成功'
+                }
+            else:
+                context = {
+                    'current_user': current_user,
+                    'info': '原密码错误'
+                }
+        else:
+            context = {
+                'current_user': current_user,
+                'info': '两次密码输入不一致'
+            }
+        return render(request, 'change_password.html', context=context)
