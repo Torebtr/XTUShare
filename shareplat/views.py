@@ -10,7 +10,7 @@ from shareplat.func import *
 # Create your views here.
 import markdown
 
-from shareplat.models import User, Update_log, Article
+from shareplat.models import User,Update_log, Article
 
 
 def page_main(request):
@@ -140,6 +140,7 @@ def myarticle(request, page_num):
         current_user = User.objects.filter().get(id=int(request.session['user']))   # 用户验证
     except:
         return HttpResponseRedirect('/XTUShare/login/')
+
     if request.method == "GET":
         if current_user == "XTUShare":
             articles = Article.objects.all().order_by('-update_time')
@@ -446,9 +447,9 @@ def go_set_tags(request):
         return HttpResponseRedirect('/XTUShare/login/')
 
     if request.method == "POST":
-        article_ids = request.POST.getlist('article_ids')
+        select_article_ids = request.POST.getlist('article_ids')
         new_articles = []
-        for select_article_id in article_ids:
+        for select_article_id in select_article_ids:
             article = Article.objects.get(id=int(select_article_id))
             if article.title.__len__() > 20:
                 article.title = article.title[:20] + '...'
@@ -467,12 +468,12 @@ def go_set_tags(request):
 
         tags = Tag.objects.all().order_by('name')
         context = {
-            'article_ids':article_ids,
-            'tags':tags,
-            'current_user':current_user,
-            'new_articles':new_articles
+            'select_article_ids': select_article_ids,
+            'tags': tags,
+            'current_user': current_user,
+            'new_articles': new_articles
         }
-        return render(request,'set_classify.html',context=context)
+        return render(request, 'set_tgas.html', context=context)
 
 
 def set_tags(request):
@@ -482,13 +483,13 @@ def set_tags(request):
         return HttpResponseRedirect('/XTUShare/login/')
 
     if request.method == "POST":
-        article_ids = request.POST.getlist('article_ids')
-        select_tags = request.POST.get('select_tags')
+        select_article_ids = request.POST.getlist('select_article_ids')
+        select_tag = request.POST.getlist('select_tag')
         append_tags = ''
-        for tag in select_tags:
+        for tag in select_tag:
             append_tags += tag + ','
-        for article_id in article_ids:
-            article = Article.objects.get(id=int(article_id))
+        for select_article_id in select_article_ids:
+            article = Article.objects.get(id=int(select_article_id))
             if article.author != current_user:
                 continue
             if article.tags == None:
@@ -976,7 +977,6 @@ def user_manage(request, page_num):
                     Author(
                         author=user,
                         article_num=article_num,
-                        invitation_user=user.invitation_user
                     )
                 )
             context = {
@@ -1154,3 +1154,19 @@ def change_password(request):
                 'info': '两次密码输入不一致'
             }
         return render(request, 'change_password.html', context=context)
+
+
+def delete_articles(request):
+    try:
+        current_user = User.objects.filter().get(id=int(request.session['user']))
+    except:
+        return HttpResponseRedirect('/XTUShare/login/')
+
+    if request.method == "POST":
+        select_article_ids = request.POST.getlist('article_ids')
+        for select_article_id in select_article_ids:
+            select_article = Article.objects.get(id=int(select_article_id))
+            if select_article.author != current_user:
+                continue
+            select_article.delete()
+        return HttpResponseRedirect('/XTUShare/myarticle/1/')

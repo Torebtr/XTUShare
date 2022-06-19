@@ -126,8 +126,6 @@
                                                 <th>姓名</th>
                                                 <th>创建时间</th>
                                                 <th>文章数</th>
-                                                <th>邀请码</th>
-                                                <th>邀请人</th>
                                                 <th>状态</th>
                                                 <th>操作</th>
                                             </tr>
@@ -140,8 +138,6 @@
                                                 <td>{{ user.author.name }}</td>
                                                 <td>{{ user.author.create_time|date:'Y-m-d H:i:s' }}</td>
                                                 <td>{{ user.article_num }}</td>
-                                                <td><code>{{ user.author.invitation_code }}</code></td>
-                                                <td>{% if user.invitation_user %}<code>{{ user.invitation_user.username }}</code>{% else %}{% endif %}</td>
                                                 <td>
                                                     {% if user.author.is_lock %}
                                                         <span class="badge badge-danger" onclick="change_user_state({{ user.author.id }})">锁定</span>

@@ -53,15 +53,11 @@ def convertBytes(bytes, lst=None):
 class Author():
     author = None
     article_num = 0
-    invitation_user = None
 
-    def __init__(self,author:Article,article_num:int,invitation_user):
+    def __init__(self,author:Article,article_num:int):
         self.author = author
         self.article_num = article_num
-        try:
-            self.invitation_user = User.objects.get(id=int(invitation_user))
-        except:
-            self.invitation_user = None
+
 
 
 class Classify_temp():
