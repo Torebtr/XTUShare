@@ -497,7 +497,7 @@ def search_result(request):
         return HttpResponseRedirect('/XTUShare/login/')
 
     keytext = request.POST.get('keytext')
-    all_article = Article.objects.filter(
+    all_article = Article.objects.filter(       # 先按关键词查找，后排序
 Q(state=3) & (Q(title__icontains=keytext) | Q(content__icontains=keytext))).order_by('-update_time')
 
     all_article_temps = []
