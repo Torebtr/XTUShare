@@ -10,7 +10,7 @@ from shareplat.func import *
 # Create your views here.
 import markdown
 
-from shareplat.models import User,Update_log, Article
+from shareplat.models import User, Article
 
 
 def page_main(request):
@@ -19,15 +19,6 @@ def page_main(request):
     except:
         current_user = None
     if request.method == "GET":
-        last_update_logs = Update_log.objects.all().order_by('-create_time')[:5]
-        update_logs = []
-        for last_update_log in last_update_logs:
-            last_update_log.content = markdown.markdown(last_update_log.content.replace('<','&lt;').replace('>','&gt;'), extensions=[
-                'markdown.extensions.extra',
-                'markdown.extensions.codehilite',
-                'markdown.extensions.toc',
-            ])
-            update_logs.append(last_update_log)
         all_article = Article.objects.filter(state=3)
         new_top10_articles = all_article.order_by('-create_time')[:10]       # 最新文章列表
         read_max_articles = all_article.order_by('-read_num')[:10]           # 阅读排行榜
@@ -46,7 +37,6 @@ def page_main(request):
         top10_authors = User.objects.all().order_by('-article_num')[:10]       # 作者排行榜
         context = {
             'current_user':current_user,      # 鉴权
-            # 'last_update_logs':update_logs,
             'new_top10_articles':new_top10_articles,
             'read_max_articles':read_max_articles,
             'top10_authors':top10_authors,

@@ -25,12 +25,6 @@ class Tag(models.Model):      # 文章标签
     create_time = models.DateTimeField(auto_now=True)
 
 
-class Update_log(models.Model):  # 上传日志
-    id = models.AutoField(primary_key=True)
-    create_time = models.DateTimeField(auto_now=True)
-    content = MDTextField()
-
-
 class Article(models.Model): # 文章
     id = models.AutoField(primary_key=True)
     classify = models.ForeignKey('Classify',on_delete=models.SET_NULL,null=True)
