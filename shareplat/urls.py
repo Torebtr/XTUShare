@@ -1,5 +1,5 @@
 # coding=utf-8
-# @author : 0uLL
+# @author : Torebtr
 # @software : pycharm
 from django.urls import path
 from shareplat import views
