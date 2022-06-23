@@ -1160,3 +1160,29 @@ def delete_articles(request):
                 continue
             select_article.delete()
         return HttpResponseRedirect('/XTUShare/myarticle/1/')
+    
+    
+def reset_password(request,user_id):
+    try:
+        current_user = User.objects.filter().get(id=int(request.session['user']))
+    except:
+        return HttpResponseRedirect('/XTUShare/login/')
+    if request.method == "POST":
+        if current_user.username == "XTUShare":
+            password = request.POST.get('password')
+            m = hashlib.md5(password.encode())
+            encry_password = m.hexdigest()
+            user = User.objects.get(id=int(user_id))
+            user.password = encry_password
+            user.save()
+            context = {
+                'user': user,
+                'reset_password_info': '重制成功'
+            }
+            return render(request, 'edite_user.html', context=context)
+        else:
+            context = {
+                'current_user': current_user,
+                'info': '您无权访问该功能'
+            }
+            return render(request, 'show_info.html', context=context)
