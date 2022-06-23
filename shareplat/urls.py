@@ -41,4 +41,5 @@ urlpatterns = [
     path('delete_user/',views.delete_user,name='delete_user'),
     path('change_password/',views.change_password,name='change_password'),
     path('delete_articles/',views.delete_articles,name='delete_articles'),
+    path('reset_password/<user_id>/',views.reset_password,name='reset_password'),
 ]
