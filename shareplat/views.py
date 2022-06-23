@@ -1064,7 +1064,7 @@ def edite_user(request, user_id):
             user.name = name
             user.email = email
             user.save()
-            return HttpResponseRedirect('/Gr33kLibrary/user_manage/1/')
+            return HttpResponseRedirect('/XTUShare/user_manage/1/')
     else:
         context = {
             'current_user': current_user,
